@@ -7,3 +7,6 @@ class BasePage(object):
 
     def go(self):
         self.driver.get(self.url)
+
+    def set_url(self, new_url):
+        self.url = new_url
