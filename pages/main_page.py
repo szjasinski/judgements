@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 from .base_element import BaseElement
 from .base_page import BasePage
@@ -8,7 +9,9 @@ class MainPage(BasePage):
 
     url = "https://orzeczenia.nsa.gov.pl/cbo/query"
 
+    # ------------------
     # on search page
+    # ------------------
     @property
     def hasla_tematyczne_input(self):
         locator = (By.ID, "hasla")
@@ -19,15 +22,31 @@ class MainPage(BasePage):
         locator = (By.XPATH, "//input[@type='submit']")
         return BaseElement(self.driver, by=locator[0], value=locator[1])
 
+    # ------------------
     # on results page
+    # ------------------
     @property
     def links_list(self):
-        info_lists = self.driver.find_elements(By.CLASS_NAME, "info-list-value")
-        wyroki = [info_lists[i] for i in range(0, len(info_lists), 2)]
-        linki = [wyroki[i].find_element(By.PARTIAL_LINK_TEXT, 'Wyrok') for i in range(len(wyroki))]
+        decyzje_lub_opis = self.driver.find_elements(By.CLASS_NAME, "info-list-value")
+        decyzje = [decyzje_lub_opis[i] for i in range(0, len(decyzje_lub_opis), 2)]
+        # decyzja to wyrok lub postanowienie, interesuja nas jedynie wyroki
+        linki = []
+        for i in range(len(decyzje)):
+            try:
+                link = decyzje[i].find_element(By.PARTIAL_LINK_TEXT, 'Wyrok')
+                linki.append(link)
+            except NoSuchElementException:
+                print("postanowienie - nie uwzgledniamy")
         return linki
 
+    @property
+    def nastepna_strona_button(self):
+        locator = (By.CLASS_NAME,"nextpage")
+        return BaseElement(self.driver, by=locator[0], value=locator[1])
+
+    # ------------------
     # on details page
+    # ------------------
     @property
     def _nazwa(self):
         locator = (By.CLASS_NAME, "war_header")
