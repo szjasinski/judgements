@@ -70,7 +70,7 @@ class MainPage(BasePage):
                 link = decyzje[i].find_element(By.PARTIAL_LINK_TEXT, 'Wyrok')
                 linki.append(link)
             except NoSuchElementException:
-                print("postanowienie - nie uwzgledniamy")
+                pass
         return linki
 
     # ------------------
@@ -144,9 +144,8 @@ class MainPage(BasePage):
         items_num = len(db['nazwa'])
         unique_items_num = len(set([db['nazwa'][i] for i in range(len(db['nazwa']))]))
 
-        print("page ", self.current_page_num, " out of ", self.max_page_num)
-        print("items: ", items_num, ". Unique items: ", unique_items_num)
-
+        print("page", self.current_page_num, "out of", self.max_page_num)
+        print("items:", items_num, "Unique items:", unique_items_num)
 
     def get_n_pages_data(self, n):
         result_pages_num = n
@@ -154,11 +153,10 @@ class MainPage(BasePage):
             if n == 0:
                 self.get_first_page_data()
             if n > 0:
-                self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 2)
+                self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 1)
                 self.get_page_data(self.url)
 
             self.print_log()
-
 
     def get_all_data(self):
         pass
