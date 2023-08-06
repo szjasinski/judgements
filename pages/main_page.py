@@ -39,11 +39,6 @@ class MainPage(BasePage):
                 print("postanowienie - nie uwzgledniamy")
         return linki
 
-    @property
-    def nastepna_strona_button(self):
-        locator = (By.CLASS_NAME,"nextpage")
-        return BaseElement(self.driver, by=locator[0], value=locator[1])
-
     # ------------------
     # on details page
     # ------------------
@@ -78,3 +73,30 @@ class MainPage(BasePage):
             details_d[key] = value
 
         return details_d
+
+    def get_data(self):
+        result_pages_num = 6
+        for n in range(result_pages_num):
+
+            if n > 0:
+                new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n+2)
+                self.set_url(new_url)
+                self.go()
+
+            # on results page
+            links = self.links_list
+
+            for i in range(len(links)):
+                links[i].click()
+                judgement_data = self.details_dict
+                self.database.append(judgement_data)
+                self.driver.back()
+                links = self.links_list
+
+            print("len database: ", str(len(self.database)))
+            for x in self.database:
+                print("Strona: ", str(n), ". Wyrok: ", x["nazwa"])
+
+            print('udalo sie!')
+            print("items: ", len(self.database))
+            print("unique items: ", len(set([self.database[i]['nazwa'] for i in range(len(self.database))])))
