@@ -9,27 +9,6 @@ import pandas as pd
 from pages.main_page import MainPage
 
 
-def get_pd_dict_format(database):
-    data = {}
-    for d in database:
-        for key, value in d.items():
-            data[key] = []
-
-    for i in range(len(database)):
-        for key, value in database[i].items():
-            data[key].append(value)
-
-        m = max([len(value) for key, value in data.items()])
-        for key in data.keys():
-            if len(data[key]) < m:
-                data[key].append("-")
-
-    for i in range(len(data['UZASADNIENIE'])):
-        data['UZASADNIENIE'][i] = 'szczegoly'
-
-    return data
-
-
 def browser_function():
     options = ChromeOptions()
     options.add_argument("--start-maximized")
@@ -49,7 +28,7 @@ def browser_function():
     # tac = time.perf_counter()
     # print(tac-tic)
 
-    data = get_pd_dict_format(main_page.database)
+    data = main_page.database
     df = pd.DataFrame(data)
     # df.to_excel('data.xlsx')
     df.to_excel("file.xlsx", engine='xlsxwriter')

@@ -9,6 +9,26 @@ class MainPage(BasePage):
 
     url = "https://orzeczenia.nsa.gov.pl/cbo/query"
 
+    def __init__(self, driver):
+        super().__init__(driver)
+        self.database = {
+                "nazwa": [],
+                "SENTENCJA": [],
+                "UZASADNIENIE": [],
+                "Data orzeczenia": [],
+                "Data wpływu": [],
+                "Sąd": [],
+                "Sędziowie": [],
+                "Symbol z opisem": [],
+                "Hasła tematyczne": [],
+                "Skarżony organ": [],
+                "Treść wyniku": [],
+                "Powołane przepisy": [],
+                "Sygn. powiązane": [],
+                "Publikacja w u.z.o.": [],
+                "Info.o glosach": [],
+            }
+
     # ------------------
     # on search page
     # ------------------
@@ -74,12 +94,23 @@ class MainPage(BasePage):
 
         return details_d
 
+    def append_ruling_data(self, ruling_data):
+        db = self.database
+
+        for key, value in ruling_data.items():
+            db[key].append(value)
+
+        m = max([len(value) for key, value in db.items()])
+        for feature in db.keys():
+            if len(db[feature]) < m:
+                db[feature].append("-")
+
     def get_data(self):
-        result_pages_num = 6
+        result_pages_num = 3
         for n in range(result_pages_num):
 
             if n > 0:
-                new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n+2)
+                new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 2)
                 self.set_url(new_url)
                 self.go()
 
@@ -88,15 +119,14 @@ class MainPage(BasePage):
 
             for i in range(len(links)):
                 links[i].click()
-                judgement_data = self.details_dict
-                self.database.append(judgement_data)
+                self.append_ruling_data(self.details_dict)
                 self.driver.back()
                 links = self.links_list
 
             print("len database: ", str(len(self.database)))
-            for x in self.database:
-                print("Strona: ", str(n), ". Wyrok: ", x["nazwa"])
+            for x in self.database["nazwa"]:
+                print("Strona: ", str(n), ". Wyrok: ", x)
 
             print('udalo sie!')
-            print("items: ", len(self.database))
-            print("unique items: ", len(set([self.database[i]['nazwa'] for i in range(len(self.database))])))
+            print("items: ", len(self.database['nazwa']))
+            print("unique items: ", len(set([self.database['nazwa'][i] for i in range(len(self.database['nazwa']))])))
