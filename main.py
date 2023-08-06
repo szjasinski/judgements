@@ -9,10 +9,13 @@ import pandas as pd
 from pages.main_page import MainPage
 
 # TO DO:
-# current page num
-# max page num
 # szukaj click function
 # threading
+# better locators
+# export to sql in batches
+# code organization in main.py
+# exceptions handling - custom exceptions?
+
 
 def browser_function():
     options = ChromeOptions()
@@ -27,7 +30,7 @@ def browser_function():
     main_page.szukaj_button.click()
 
     # tic = time.perf_counter()
-    main_page.get_n_pages_data(5)
+    main_page.get_nth_page_data(5)
     # object for number of pages
 
     # tac = time.perf_counter()
@@ -35,7 +38,6 @@ def browser_function():
 
     data = main_page.database
     df = pd.DataFrame(data)
-    # df.to_excel('data.xlsx')
     df.to_excel("file.xlsx", engine='xlsxwriter')
 
     df.to_csv('file.csv')
