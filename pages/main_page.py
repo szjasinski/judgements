@@ -7,10 +7,9 @@ from .base_page import BasePage
 
 class MainPage(BasePage):
 
-    url = "https://orzeczenia.nsa.gov.pl/cbo/query"
-
     def __init__(self, driver):
         super().__init__(driver)
+        self.url = "https://orzeczenia.nsa.gov.pl/cbo/query"
         self.database = {
                 "nazwa": [],
                 "SENTENCJA": [],
@@ -68,7 +67,7 @@ class MainPage(BasePage):
         return BaseElement(self.driver, by=locator[0], value=locator[1]).text
 
     @property
-    def details_dict(self):
+    def ruling_data_dict(self):
 
         driver = self.driver
 
@@ -105,28 +104,42 @@ class MainPage(BasePage):
             if len(db[feature]) < m:
                 db[feature].append("-")
 
-    def get_data(self):
-        result_pages_num = 3
-        for n in range(result_pages_num):
-
-            if n > 0:
-                new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 2)
-                self.set_url(new_url)
-                self.go()
-
-            # on results page
+    def get_first_page_data(self):
+        links = self.links_list
+        for i in range(len(links)):
+            links[i].click()
+            self.append_ruling_data(self.ruling_data_dict)
+            self.driver.back()
             links = self.links_list
 
-            for i in range(len(links)):
-                links[i].click()
-                self.append_ruling_data(self.details_dict)
-                self.driver.back()
-                links = self.links_list
+    def get_page_data(self, url):
+        # for pages with numbers greater than 1
+        self.set_url(url)
+        self.go()
 
-            print("len database: ", str(len(self.database)))
-            for x in self.database["nazwa"]:
-                print("Strona: ", str(n), ". Wyrok: ", x)
+        links = self.links_list
+        for i in range(len(links)):
+            links[i].click()
+            self.append_ruling_data(self.ruling_data_dict)
+            self.driver.back()
+            links = self.links_list
 
-            print('udalo sie!')
-            print("items: ", len(self.database['nazwa']))
-            print("unique items: ", len(set([self.database['nazwa'][i] for i in range(len(self.database['nazwa']))])))
+    def print_log(self, page_num):
+        db = self.database
+        print("items: ", len(db['nazwa']))
+        print("unique items: ", len(set([db['nazwa'][i] for i in range(len(db['nazwa']))])))
+
+    def get_n_pages_data(self, n):
+        result_pages_num = n
+        for n in range(result_pages_num):
+            if n == 0:
+                self.get_first_page_data()
+            if n > 0:
+                self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 2)
+                self.get_page_data(self.url)
+
+            self.print_log(n)
+
+    def get_all_data(self):
+        pass
+

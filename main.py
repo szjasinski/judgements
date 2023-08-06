@@ -22,7 +22,7 @@ def browser_function():
     main_page.szukaj_button.click()
 
     # tic = time.perf_counter()
-    main_page.get_data()
+    main_page.get_n_pages_data(5)
     # object for number of pages
 
     # tac = time.perf_counter()
