@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
-
+import pandas as pd
 
 from pages.main_page import MainPage
 
@@ -26,8 +26,14 @@ def browser_function():
 
     # tic = time.perf_counter()
 
-    result_pages_num = 3
+    result_pages_num = 6
     for n in range(result_pages_num):
+
+        if n > 0:
+            new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n+2)
+            main_page.set_url(new_url)
+            main_page.go()
+
         # on results page
         links = main_page.links_list
         loop = range(len(links))
@@ -43,9 +49,7 @@ def browser_function():
         for x in database:
             print("Strona: ", str(n), ". Wyrok: ", x["nazwa"])
 
-        new_url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n+2)
-        main_page.set_url(new_url)
-        main_page.go()
+
 
         # object for number of pages
 
@@ -56,8 +60,30 @@ def browser_function():
     print(len(database))
     print(len(set([database[i]['nazwa'] for i in range(len(database))])))
 
+    data = {}
+    for d in database:
+        for key, value in d.items():
+            data[key] = []
 
-    # driver.quit()
+    for i in range(len(database)):
+        for key, value in database[i].items():
+            data[key].append(value)
+
+        m = max([len(value) for key, value in data.items()])
+        for key in data.keys():
+            if len(data[key]) < m:
+                data[key].append("-")
+
+    for i in range(len(data['UZASADNIENIE'])):
+        data['UZASADNIENIE'][i] = 'szczegoly'
+
+    df = pd.DataFrame(data)
+    # df.to_excel('data.xlsx')
+    df.to_excel("file.xlsx", engine='xlsxwriter')
+
+    df.to_csv('file.csv')
+
+    driver.quit()
 
 
 if __name__ == "__main__":
