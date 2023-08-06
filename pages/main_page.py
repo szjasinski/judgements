@@ -44,6 +44,21 @@ class MainPage(BasePage):
     # ------------------
     # on results page
     # ------------------
+
+    @property
+    def current_page_num(self):
+        locator = (By.CLASS_NAME, "top-linki")
+        txt = BaseElement(self.driver, by=locator[0], value=locator[1]).text
+        current_page = int(txt.split("Str. ")[1].split(" z ")[0])
+        return current_page
+
+    @property
+    def max_page_num(self):
+        locator = (By.CLASS_NAME, "top-linki")
+        txt = BaseElement(self.driver, by=locator[0], value=locator[1]).text
+        max_page = int(txt.split("Str. ")[1].split(" z ")[1].split(" Powrót do szukania")[0])
+        return max_page
+
     @property
     def links_list(self):
         decyzje_lub_opis = self.driver.find_elements(By.CLASS_NAME, "info-list-value")
@@ -59,7 +74,7 @@ class MainPage(BasePage):
         return linki
 
     # ------------------
-    # on details page
+    # on ruling details page
     # ------------------
     @property
     def _nazwa(self):
@@ -124,10 +139,14 @@ class MainPage(BasePage):
             self.driver.back()
             links = self.links_list
 
-    def print_log(self, page_num):
+    def print_log(self):
         db = self.database
-        print("items: ", len(db['nazwa']))
-        print("unique items: ", len(set([db['nazwa'][i] for i in range(len(db['nazwa']))])))
+        items_num = len(db['nazwa'])
+        unique_items_num = len(set([db['nazwa'][i] for i in range(len(db['nazwa']))]))
+
+        print("page ", self.current_page_num, " out of ", self.max_page_num)
+        print("items: ", items_num, ". Unique items: ", unique_items_num)
+
 
     def get_n_pages_data(self, n):
         result_pages_num = n
@@ -138,7 +157,8 @@ class MainPage(BasePage):
                 self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 2)
                 self.get_page_data(self.url)
 
-            self.print_log(n)
+            self.print_log()
+
 
     def get_all_data(self):
         pass

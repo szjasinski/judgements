@@ -8,6 +8,11 @@ import pandas as pd
 
 from pages.main_page import MainPage
 
+# TO DO:
+# current page num
+# max page num
+# szukaj click function
+# threading
 
 def browser_function():
     options = ChromeOptions()
