@@ -12,8 +12,6 @@ class MainPage(BasePage):
         self.url = "https://orzeczenia.nsa.gov.pl/cbo/query"
         self.database = {
                 "nazwa": [],
-                "SENTENCJA": [],
-                "UZASADNIENIE": [],
                 "Data orzeczenia": [],
                 "Data wpływu": [],
                 "Sąd": [],
@@ -26,6 +24,9 @@ class MainPage(BasePage):
                 "Sygn. powiązane": [],
                 "Publikacja w u.z.o.": [],
                 "Info.o glosach": [],
+                "SENTENCJA": [],
+                "UZASADNIENIE": [],
+                "TEZY": [],
             }
 
     # ------------------
@@ -147,17 +148,17 @@ class MainPage(BasePage):
         print("page", self.current_page_num, "out of", self.max_page_num)
         print("items:", items_num, "Unique items:", unique_items_num)
 
-    def get_n_pages_data(self, n):
-        result_pages_num = n
-        for n in range(result_pages_num):
-            if n == 0:
-                self.get_first_page_data()
-            if n > 0:
-                self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 1)
-                self.get_page_data(self.url)
+    def get_nth_page_data(self, n):
+        if n == 0:
+            self.get_first_page_data()
+        if n > 0:
+            self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 1)
+            self.get_page_data(self.url)
 
-            self.print_log()
+        self.print_log()
 
     def get_all_data(self):
-        pass
+        for n in range(self.max_page_num):
+            self.get_nth_page_data(n)
+
 
