@@ -3,18 +3,21 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+
 import time
 import pandas as pd
+import threading
 
 from pages.main_page import MainPage
 
 # TO DO:
-# szukaj click function
 # threading
 # better locators
 # export to sql in batches
 # code organization in main.py
 # exceptions handling - custom exceptions?
+# processing
+# track number of rulings
 
 
 def browser_function():
@@ -25,13 +28,11 @@ def browser_function():
 
     # on search page
     main_page = MainPage(driver=driver)
-    main_page.go()
-    main_page.hasla_tematyczne_input.input_text("Podatek od czynności cywilnoprawnych!")
-    main_page.szukaj_button.click()
 
     # tic = time.perf_counter()
-    main_page.get_nth_page_data(5)
-    # object for number of pages
+    # main_page.get_nth_page_data(2)
+    main_page.get_pages_data_in_range(1, 5, 2)
+    main_page.get_pages_data_in_range(2, 5, 2)
 
     # tac = time.perf_counter()
     # print(tac-tic)

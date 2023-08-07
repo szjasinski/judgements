@@ -149,13 +149,20 @@ class MainPage(BasePage):
         print("items:", items_num, "Unique items:", unique_items_num)
 
     def get_nth_page_data(self, n):
-        if n == 0:
+        if n == 1:
             self.get_first_page_data()
-        if n > 0:
-            self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n + 1)
+        elif n > 1:
+            self.url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=" + str(n)
             self.get_page_data(self.url)
 
         self.print_log()
+
+    def get_pages_data_in_range(self, start, stop, step=1):
+        self.url = "https://orzeczenia.nsa.gov.pl/cbo/query"
+        self.go()
+        self.szukaj_button.click()
+        for n in range(start, stop, step):
+            self.get_nth_page_data(n)
 
     def get_all_data(self):
         for n in range(self.max_page_num):
