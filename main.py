@@ -18,15 +18,22 @@ from pages.main_page import MainPage
 # exceptions handling - custom exceptions?
 # processing
 # track number of rulings
+# ruling data dict in dictionary format convertable to pandas df
+# correct language of variables (English/Polish inconsistent)
+# more elegant functions in main_page.py
 
 
-def browser_function():
+def get_driver():
     options = ChromeOptions()
     options.add_argument("--start-maximized")
     options.add_experimental_option("detach", True)
     driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    return driver
 
-    # on search page
+
+def browser_function():
+
+    driver = get_driver()
     main_page = MainPage(driver=driver)
 
     # tic = time.perf_counter()
@@ -37,11 +44,8 @@ def browser_function():
     # tac = time.perf_counter()
     # print(tac-tic)
 
-    data = main_page.database
-    df = pd.DataFrame(data)
-    df.to_excel("file.xlsx", engine='xlsxwriter')
-
-    df.to_csv('file.csv')
+    main_page.export_data_to_csv("csv_file.csv")
+    main_page.export_data_to_xlsx("excel_file.xlsx")
 
     driver.quit()
 

@@ -4,6 +4,8 @@ from selenium.common.exceptions import NoSuchElementException
 from .base_element import BaseElement
 from .base_page import BasePage
 
+import pandas as pd
+
 
 class MainPage(BasePage):
 
@@ -168,4 +170,10 @@ class MainPage(BasePage):
         for n in range(self.max_page_num):
             self.get_nth_page_data(n)
 
+    def export_data_to_csv(self, filename):
+        df = pd.DataFrame(self.database)
+        df.to_csv(filename)
 
+    def export_data_to_xlsx(self, filename):
+        df = pd.DataFrame(self.database)
+        df.to_excel(filename, engine='xlsxwriter')
