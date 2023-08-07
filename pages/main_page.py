@@ -159,14 +159,25 @@ class MainPage(BasePage):
 
         self.print_log()
 
-    def get_pages_data_in_range(self, start, stop, step=1):
+    def get_pages_data_in_range(self, start, stop, step=1, topic=None):
         self.url = "https://orzeczenia.nsa.gov.pl/cbo/query"
         self.go()
-        self.szukaj_button.click()
+        if topic is None:
+            self.szukaj_button.click()
+        else:
+            self.hasla_tematyczne_input.input_text(topic)
+            self.szukaj_button.click()
         for n in range(start, stop, step):
             self.get_nth_page_data(n)
 
-    def get_all_data(self):
+    def get_all_data(self, topic=None):
+        self.url = "https://orzeczenia.nsa.gov.pl/cbo/query"
+        self.go()
+        if topic is None:
+            self.szukaj_button.click()
+        else:
+            self.hasla_tematyczne_input.input_text(topic)
+            self.szukaj_button.click()
         for n in range(self.max_page_num):
             self.get_nth_page_data(n)
 
