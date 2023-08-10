@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+# TO DO: scrapy solution
+
 # Make a request
 url = "https://orzeczenia.nsa.gov.pl/cbo/find?p=1"
 response = requests.get(url)
