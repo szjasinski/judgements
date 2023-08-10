@@ -21,6 +21,7 @@ from pages.main_page import MainPage
 # ruling data dict in dictionary format convertable to pandas df
 # correct language of variables (English/Polish inconsistent)
 # more elegant functions in main_page.py
+# rewrite using scrapy library
 
 
 def get_driver():
@@ -34,19 +35,19 @@ def get_driver():
 def browser_function():
 
     driver = get_driver()
-    main_page = MainPage(driver=driver)
+    website = MainPage(driver=driver)
 
-    # tic = time.perf_counter()
-    # main_page.get_nth_page_data(2)
-    main_page.get_pages_data_in_range(1, 5, 2)
-    main_page.get_pages_data_in_range(2, 5, 2)
+    # topics important for business use
+    topics = ["Podatek od towarów i usług!", "Podatek dochodowy od osób prawnych!"]
 
-    # tac = time.perf_counter()
-    # print(tac-tic)
+    tic = time.perf_counter()
+    website.get_pages_data_in_range(1, 101, 1, topic=topics[1])
+    # website.get_all_data(topic=topics[1])
 
-    main_page.export_data_to_csv("csv_file.csv")
-    main_page.export_data_to_xlsx("excel_file.xlsx")
+    tac = time.perf_counter()
+    print(tac-tic)
 
+    website.export_data_to_csv(topics[1] + ".csv")
     driver.quit()
 
 
