@@ -7,6 +7,13 @@ import scrapy
 
 
 class JacScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    nazwa = scrapy.Field()
+
+
+
+    # # ITEMS FOR PRACUJ.PL SCRAPER
+    # job_title = scrapy.Field()
+    # employer = scrapy.Field()
+    # price_from = scrapy.Field()
+    # price_to = scrapy.Field()
+    # price_unit = scrapy.Field()
