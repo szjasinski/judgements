@@ -63,9 +63,10 @@ CONCURRENT_REQUESTS = 10
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "jac_scraper.pipelines.JacScraperPipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "jac_scraper.pipelines.JacScraperPipeline": 300,
+   "jac_scraper.pipelines.WhitespacePipeline": 100,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

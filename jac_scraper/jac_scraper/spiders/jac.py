@@ -32,15 +32,6 @@ class JacSpider(CrawlSpider):
         # wartosci_tabela = response.xpath('//td[@class="info-list-value"]/table/tr/td/text()').getall()
         wartosci_tabela = response.xpath('//td[@class="info-list-value"]')
 
-        def clean_data(x):
-            output = ''
-            for char in x:
-                if char == '\n' or char == '\t':
-                    pass
-                else:
-                    output += char
-            return output
-
         data_orzeczenia = response.xpath('//td[@class="info-list-value"]/table/tr/td[1]/text()').get()
         prawomocnosc = response.xpath('//td[@class="info-list-value"]/table/tr/td[2]/text()').get()
 
@@ -51,7 +42,7 @@ class JacSpider(CrawlSpider):
 
         for i in range(len(wartosci_tabela)):
             ab = wartosci_tabela[i].xpath('.//text()').get()
-            wartosci_tabela[i] = clean_data(ab)
+            wartosci_tabela[i] = ab
         wartosci_tabela[0] = data_orzeczenia
         print(wartosci_tabela)
 
